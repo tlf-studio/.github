@@ -1,0 +1,14 @@
+# Vérifie que chaque commit d'une PR porte une signature DCO (git commit -s).
+# Voir CONTRIBUTING.md et DCO dans tlf-studio/.github.
+name: DCO
+
+on:
+  pull_request:
+    branches: [ $default-branch ]
+
+permissions:
+  contents: read
+
+jobs:
+  dco:
+    uses: tlf-studio/.github/.github/workflows/dco.yml@main
