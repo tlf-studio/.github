@@ -1,0 +1,6 @@
+{
+  "name": "Signature DCO (TLF Studio)",
+  "description": "Vérifie que chaque commit d'une PR porte un Signed-off-by au nom de son auteur (Developer Certificate of Origin 1.1).",
+  "iconName": "octicon shield-check",
+  "categories": ["Automation"]
+}

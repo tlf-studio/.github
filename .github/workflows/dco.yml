@@ -1,0 +1,91 @@
+# Workflow réutilisable : vérifie la signature DCO de chaque commit d'une PR.
+# Échoue si un commit n'a pas de Signed-off-by, ou si le nom de la signature diffère
+# de celui de l'auteur du commit. Les commits de fusion et ceux de dependabot[bot]
+# et github-actions[bot] sont ignorés.
+#
+# Appel depuis un repo (proposé automatiquement via workflow-templates/dco.yml) :
+#
+#   name: DCO
+#   on: pull_request
+#   jobs:
+#     dco:
+#       uses: tlf-studio/.github/.github/workflows/dco.yml@main
+name: Vérification DCO
+
+on:
+  workflow_call:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  dco:
+    name: Signature DCO
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Vérifier les Signed-off-by
+        env:
+          BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          if [ -z "$BASE" ] || [ "$BASE" = "0000000000000000000000000000000000000000" ]; then
+            echo "Aucune base de comparaison : rien à vérifier."
+            exit 0
+          fi
+          git fetch --no-tags origin "$BASE" 2>/dev/null || true
+
+          echecs=0
+          total=0
+          # Champs : sha, nom de l'auteur, signatures (une par ligne).
+          while IFS= read -r -d $'\x1e' bloc; do
+            bloc="${bloc#$'\n'}"
+            [ -z "$bloc" ] && continue
+            sha=$(printf '%s' "$bloc" | cut -d $'\x1f' -f1)
+            auteur=$(printf '%s' "$bloc" | cut -d $'\x1f' -f2)
+            sujet=$(printf '%s' "$bloc" | cut -d $'\x1f' -f3)
+            signatures=$(printf '%s' "$bloc" | cut -d $'\x1f' -f4-)
+            court=${sha:0:7}
+
+            case "$auteur" in
+              "dependabot[bot]"|"github-actions[bot]")
+                echo "– $court ignoré (bot : $auteur)"
+                continue ;;
+            esac
+            total=$((total + 1))
+
+            if [ -z "$(printf '%s' "$signatures" | tr -d '[:space:]')" ]; then
+              echo "::error::Commit $court « $sujet » : signature DCO absente (ligne Signed-off-by)."
+              echecs=$((echecs + 1))
+              continue
+            fi
+            # Nom de chaque signature : tout ce qui précède « <email> ».
+            if printf '%s\n' "$signatures" | sed -n 's/^[[:space:]]*\(.*[^[:space:]]\)[[:space:]]*<.*$/\1/p' | grep -Fxq -- "$auteur"; then
+              echo "✓ $court signé par $auteur"
+            else
+              noms=$(printf '%s\n' "$signatures" | sed -n 's/^[[:space:]]*\(.*[^[:space:]]\)[[:space:]]*<.*$/\1/p' | paste -sd ',' -)
+              echo "::error::Commit $court « $sujet » : la signature ($noms) ne correspond pas à l'auteur du commit ($auteur)."
+              echecs=$((echecs + 1))
+            fi
+          done < <(git log --no-merges --format='%H%x1f%an%x1f%s%x1f%(trailers:key=Signed-off-by,valueonly,separator=%x0a)%x1e' "$BASE..$HEAD")
+
+          if [ "$echecs" -gt 0 ]; then
+            echo
+            echo "$echecs commit(s) sur $total sans signature DCO valide."
+            echo "Chaque commit doit porter « Signed-off-by: Nom <email> » avec le même nom que l'auteur."
+            echo "Pour corriger, configurez votre nom puis signez les commits de la branche :"
+            echo
+            echo "  git config user.name \"Votre Nom\""
+            echo "  git rebase --signoff $BASE"
+            echo "  git push --force-with-lease"
+            echo
+            echo "Voir CONTRIBUTING.md et DCO : https://github.com/tlf-studio/.github"
+            exit 1
+          fi
+          echo "$total commit(s) vérifié(s) : signature DCO valide."
