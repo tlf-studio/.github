@@ -25,6 +25,10 @@
 
 ### Projets
 
+<p align="center">
+  <a href="https://tlfstudio.fr"><img src="https://tlfstudio.fr/widget/dernier-projet.svg" alt="Dernier projet TLF Studio" width="480" height="140"></a>
+</p>
+
 Les projets seront dévoilés un par un sur [tlfstudio.fr](https://tlfstudio.fr). Rejoins le [Discord](https://discord.gg/XXXXXXX) pour ne rien rater.
 
 ### Participer
