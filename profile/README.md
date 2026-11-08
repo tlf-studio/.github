@@ -4,7 +4,7 @@
 
 <p align="center">
   <strong>Un studio indépendant qui fabrique des jeux, des mods et des bots.</strong><br>
-  TLF Studio est l'atelier de <a href="https://github.com/TALFADEV">talfa</a>. Des projets personnels, poussés jusqu'au bout, partagés avec la communauté.
+  TLF Studio est l'atelier de <a href="https://github.com/TALFADEV">TALFA</a>. Des projets personnels, poussés jusqu'au bout, partagés avec la communauté.
 </p>
 
 <p align="center">
