@@ -9,7 +9,7 @@
 
 <p align="center">
   <a href="https://tlfstudio.fr">Site</a> ·
-  <a href="https://discord.gg/XXXXXXX">Discord</a> ·
+  <a href="https://discord.gg/dxuMmnbHmU">Discord</a> ·
   <a href="https://youtube.com/@XXXXXXX">YouTube</a> ·
   <a href="https://twitch.tv/XXXXXXX">Twitch</a>
 </p>
@@ -29,7 +29,11 @@
   <a href="https://tlfstudio.fr"><img src="https://tlfstudio.fr/widget/dernier-projet.svg" alt="Dernier projet TLF Studio" width="480" height="140"></a>
 </p>
 
-Les projets seront dévoilés un par un sur [tlfstudio.fr](https://tlfstudio.fr). Rejoins le [Discord](https://discord.gg/XXXXXXX) pour ne rien rater.
+Les projets seront dévoilés un par un sur [tlfstudio.fr](https://tlfstudio.fr). Rejoins le [Discord](https://discord.gg/dxuMmnbHmU) pour ne rien rater.
+
+## Communauté
+Questions, idées, alphas et révélations en direct : rejoins le Discord de TLF Studio.
+[![Discord](https://img.shields.io/discord/1568263290164084906?label=Discord&logo=discord&color=E8562A)](https://discord.gg/dxuMmnbHmU)
 
 ### Participer
 
